@@ -21,7 +21,7 @@ import GoogleSuccess from "./components/user/GoogleSuccess";
 import Home from "./components/user/Home";
 import Cars from "./components/user/Cars";
 import CarBooking from "./components/user/CarBooking";
-import Checkout from "./components/user/CheckOut";
+import Checkout from "./components/user/Checkout";
 import BookingDetails from "./components/user/BookingDetails";
 import UserBookings from "./components/user/UserBookings";
 import Profile from "./components/user/Profile";

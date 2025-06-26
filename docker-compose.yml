@@ -1,0 +1,22 @@
+
+
+services:
+  backend:
+    build:
+      context: ./car_rental_backend
+    container_name: boomboom-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./car_rental_backend/.env
+    volumes:
+      - ./car_rental_backend:/app
+    restart: always
+
+  frontend:
+    build:
+      context: ./car-rental-frontend
+    container_name: boomboom-frontend
+    ports:
+      - "5173:80"  # ✅ This maps localhost:5173 → NGINX port 80
+    restart: always
