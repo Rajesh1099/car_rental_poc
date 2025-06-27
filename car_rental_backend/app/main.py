@@ -44,5 +44,7 @@ app.include_router(user_bookings_router, prefix="/user/bookings", tags=["User Bo
 app.include_router(user_payments_router, prefix="/user/payments", tags=["User Payments"])
 
 
-
+@app.get("/")
+def read_root():
+    return {"message": "BoomBoomCars backend is running"}
 
