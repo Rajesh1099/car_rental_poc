@@ -12,3 +12,8 @@ frontend/.env
 # OS/Editor stuff
 .DS_Store
 .env
+
+
+*.tar
+
+    
