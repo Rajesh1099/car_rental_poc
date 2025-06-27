@@ -20,7 +20,8 @@ app = FastAPI()
 
 # Allow your React frontend origin during development
 origins = [
-    "http://localhost:5173",  # React dev server
+    "http://localhost:5173", 
+    "https://boomboomcars.netlify.app",
 ]
 
 app.add_middleware(
