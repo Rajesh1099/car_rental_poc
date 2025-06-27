@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 from datetime import timedelta, datetime
 import requests
+from fastapi.responses import RedirectResponse, HTMLResponse
 from urllib.parse import urlencode
-from fastapi.responses import RedirectResponse
 
 from app import schemas, models, database, utils
 from app.config import settings
@@ -18,10 +18,7 @@ from app.email_utils import (
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
-
-# ----------------------
-# Dependency: DB session
-# ----------------------
+# ---------------------- Dependency: DB session ----------------------
 def get_db():
     db = database.SessionLocal()
     try:
@@ -29,20 +26,14 @@ def get_db():
     finally:
         db.close()
 
-
-# -------------------
-# Utility: JWT Token
-# -------------------
+# ------------------- Utility: JWT Token -------------------
 def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=10080)) # Default 7 days
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=10080))  # 7 days
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
-
-# -----------------------
-# Register New User
-# -----------------------
+# ----------------------- Register -----------------------
 @router.post("/register", response_model=schemas.ShowUser)
 def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(models.User).filter(models.User.email == user.email).first()
@@ -59,18 +50,12 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    # Send verification email
     token = generate_email_token(user.email)
     send_verification_email(user.name, user.email, token)
 
     return new_user
 
-
-# -----------------------
-# Verify Email Token
-# -----------------------
-from fastapi.responses import HTMLResponse
-
+# ----------------------- Verify Email -----------------------
 @router.get("/verify-email", response_class=HTMLResponse)
 def verify_email(token: str, db: Session = Depends(get_db)):
     try:
@@ -87,11 +72,10 @@ def verify_email(token: str, db: Session = Depends(get_db)):
             user.is_verified = True
             db.commit()
 
-        # ✅ Return HTML page that auto-redirects after 2 seconds
         return HTMLResponse(content=f"""
         <html>
           <head>
-            <meta http-equiv="refresh" content="2;url=http://localhost:5173" />
+            <meta http-equiv="refresh" content="2;url={settings.FRONTEND_BASE_URL}/" />
             <title>Email Verified</title>
             <style>
               body {{
@@ -130,17 +114,12 @@ def verify_email(token: str, db: Session = Depends(get_db)):
             status_code=400
         )
 
-
-
-# -----------------------
-# Login with Email/Pass
-# -----------------------
+# ----------------------- Login -----------------------
 @router.post("/login", response_model=schemas.TokenSchema)
 def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email == form_data.username).first()
     if not user or not utils.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Invalid email or password")
-
     if not user.is_verified:
         raise HTTPException(status_code=403, detail="Email not verified")
 
@@ -148,7 +127,6 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
         data={"sub": user.email},
         expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
-
     return {
         "access_token": access_token,
         "token_type": "bearer",
@@ -156,10 +134,7 @@ def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
         "is_verified": user.is_verified
     }
 
-
-# -----------------------
-# Forgot Password
-# -----------------------
+# ----------------------- Forgot Password -----------------------
 @router.post("/forgot-password")
 def forgot_password(request: schemas.ForgotPasswordRequest, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.email == request.email).first()
@@ -171,10 +146,7 @@ def forgot_password(request: schemas.ForgotPasswordRequest, db: Session = Depend
 
     return {"message": "Password reset link sent to your email."}
 
-
-# -----------------------
-# Reset Password
-# -----------------------
+# ----------------------- Reset Password -----------------------
 @router.post("/reset-password")
 def reset_password(request: schemas.ResetPasswordRequest, db: Session = Depends(get_db)):
     try:
@@ -195,14 +167,8 @@ def reset_password(request: schemas.ResetPasswordRequest, db: Session = Depends(
     except JWTError:
         raise HTTPException(status_code=400, detail="Invalid or expired token")
 
-
-# -----------------------
-# Get Current User
-# -----------------------
-def get_current_user(
-    db: Session = Depends(get_db),
-    token: str = Depends(oauth2_scheme)
-):
+# ----------------------- Get Current User -----------------------
+def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -222,10 +188,7 @@ def get_current_user(
 
     return user
 
-
-# -----------------------
-# Google OAuth Login Flow
-# -----------------------
+# ----------------------- Google OAuth Login Flow -----------------------
 @router.get("/google/login")
 def google_login():
     url = (
@@ -239,15 +202,9 @@ def google_login():
     )
     return {"auth_url": url}
 
-
-
-
-from fastapi.responses import RedirectResponse
-from urllib.parse import urlencode
-
 @router.get("/google/callback")
 def google_callback(code: str, db: Session = Depends(get_db)):
-    # Step 1: Exchange code for access token
+    # Step 1: Exchange code for token
     token_url = "https://oauth2.googleapis.com/token"
     data = {
         "code": code,
@@ -278,17 +235,11 @@ def google_callback(code: str, db: Session = Depends(get_db)):
 
     # Step 3: Check or create user
     user = db.query(models.User).filter(models.User.email == email).first()
-
     if user:
-      if user.is_admin:
-        redirect_url = (
-            "http://localhost:5173/"
-            "?error=admin_login_not_allowed"
-        )
-        return RedirectResponse(url=redirect_url)
-
-
-        
+        if user.is_admin:
+            return RedirectResponse(
+                url=f"{settings.FRONTEND_BASE_URL}/?error=admin_login_not_allowed"
+            )
     else:
         user = models.User(
             name=name or email.split("@")[0],
@@ -301,16 +252,16 @@ def google_callback(code: str, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(user)
 
-    # Step 4: Generate JWT
-    access_token = create_access_token(
+    # Step 4: Generate JWT token
+    jwt_token = create_access_token(
         data={"sub": user.email},
         expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
 
-    # Step 5: Redirect to frontend with token and flags
+    # Step 5: Redirect with token
     redirect_url = (
-        f"http://localhost:5173/google/success"
-        f"?access_token={access_token}"
+        f"{settings.FRONTEND_BASE_URL}/google/success"
+        f"?access_token={jwt_token}"
         f"&is_admin={user.is_admin}"
         f"&is_verified={user.is_verified}"
     )
