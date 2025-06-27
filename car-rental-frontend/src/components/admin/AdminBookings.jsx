@@ -24,7 +24,7 @@ const AdminBookings = () => {
 
   const fetchBookings = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/admin/bookings", {
+      const res = await axios.get("https://car-rental-backend-mda4.onrender.com/admin/bookings", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBookings(res.data);
@@ -43,7 +43,7 @@ const AdminBookings = () => {
   const confirmCancellation = async () => {
     try {
       await axios.put(
-        `http://localhost:8000/admin/bookings/${selectedBookingId}/cancel`,
+        `https://car-rental-backend-mda4.onrender.com/admin/bookings/${selectedBookingId}/cancel`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

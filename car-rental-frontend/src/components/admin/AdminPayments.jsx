@@ -25,7 +25,7 @@ const AdminPayments = () => {
 
   const fetchPayments = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/admin/payments", {
+      const res = await axios.get("https://car-rental-backend-mda4.onrender.com/admin/payments", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPayments(res.data);

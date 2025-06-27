@@ -23,7 +23,7 @@ const Users = () => {
 
   const fetchUsers = async (token) => {
     try {
-      const response = await axios.get('http://localhost:8000/admin/users', {
+      const response = await axios.get('https://car-rental-backend-mda4.onrender.com/admin/users', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -49,7 +49,7 @@ const Users = () => {
 
     try {
       const token = localStorage.getItem('admin_token');
-      await axios.delete(`http://localhost:8000/admin/users/${id}?email=${encodeURIComponent(email)}`, {
+      await axios.delete(`https://car-rental-backend-mda4.onrender.com/admin/users/${id}?email=${encodeURIComponent(email)}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers((prev) => prev.filter((user) => user.id !== id));

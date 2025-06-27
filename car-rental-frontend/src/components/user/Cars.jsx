@@ -58,7 +58,7 @@ export default function Cars() {
 
         setCity(cityParam);
 
-        const res = await axios.get("http://localhost:8000/user/cars", {
+        const res = await axios.get("https://car-rental-backend-mda4.onrender.com/user/cars", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("user_token")}`,
           },

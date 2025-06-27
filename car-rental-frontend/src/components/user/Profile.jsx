@@ -47,7 +47,7 @@ const Profile = () => {
         const token = localStorage.getItem("user_token");
         if (!token) return navigate("/");
 
-        const res = await axios.get("http://localhost:8000/user/profile", {
+        const res = await axios.get("https://car-rental-backend-mda4.onrender.com/user/profile", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -128,7 +128,7 @@ const Profile = () => {
     try {
       const token = localStorage.getItem("user_token");
       const res = await axios.put(
-        "http://localhost:8000/user/profile/update",
+        "https://car-rental-backend-mda4.onrender.com/user/profile/update",
         {
           name: form.name || undefined,
           email: form.email || undefined,

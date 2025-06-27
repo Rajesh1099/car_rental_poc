@@ -22,7 +22,7 @@ export default function UserBookings() {
       try {
         const token = localStorage.getItem("user_token");
         const res = await axios.get(
-          "http://localhost:8000/user/booking_history",
+          "https://car-rental-backend-mda4.onrender.com/user/booking_history",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

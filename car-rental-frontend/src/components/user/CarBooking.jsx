@@ -205,7 +205,7 @@ const CarBooking = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:8000/user/bookings",
+        "https://car-rental-backend-mda4.onrender.com/user/bookings",
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },

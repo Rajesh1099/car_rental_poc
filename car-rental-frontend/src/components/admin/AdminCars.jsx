@@ -40,7 +40,7 @@ const AdminCars = () => {
 
   const fetchCars = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/admin/cars", {
+      const res = await axios.get("https://car-rental-backend-mda4.onrender.com/admin/cars", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCars(res.data);
@@ -70,7 +70,7 @@ const AdminCars = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8000/admin/cars/create-car",
+        "https://car-rental-backend-mda4.onrender.com/admin/cars/create-car",
         carForm,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -98,7 +98,7 @@ const AdminCars = () => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `http://localhost:8000/admin/cars/${selectedCar.id}/update`,
+        `https://car-rental-backend-mda4.onrender.com/admin/cars/${selectedCar.id}/update`,
         carForm,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -122,7 +122,7 @@ const AdminCars = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:8000/admin/cars/${selectedCar.id}/delete`,
+        `https://car-rental-backend-mda4.onrender.com/admin/cars/${selectedCar.id}/delete`,
         {
           headers: { Authorization: `Bearer ${token}` },
           data: { car_license_plate: selectedCar.license_plate },

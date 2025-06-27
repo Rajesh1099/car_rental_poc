@@ -36,7 +36,7 @@ export default function BookingDetails() {
         }
 
         const res = await axios.get(
-          `http://localhost:8000/user/bookings/${bookingId}`,
+          `https://car-rental-backend-mda4.onrender.com/user/bookings/${bookingId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -100,7 +100,7 @@ export default function BookingDetails() {
     try {
       const token = localStorage.getItem("user_token");
       const res = await axios.put(
-        `http://localhost:8000/user/bookings/${bookingId}/cancel`,
+        `https://car-rental-backend-mda4.onrender.com/user/bookings/${bookingId}/cancel`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },

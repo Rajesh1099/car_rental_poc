@@ -71,7 +71,7 @@ export default function Checkout() {
   const fetchBookingDetails = async (id) => {
     try {
       const token = localStorage.getItem("user_token");
-      const res = await axios.get(`http://localhost:8000/user/bookings/${id}`, {
+      const res = await axios.get(`https://car-rental-backend-mda4.onrender.com/user/bookings/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setBooking(res.data);
@@ -157,7 +157,7 @@ export default function Checkout() {
     setProcessing(true);
     try {
       await axios.post(
-        "http://localhost:8000/user/payments",
+        "https://car-rental-backend-mda4.onrender.com/user/payments",
         {
           booking_id: bookingId,
           amount,

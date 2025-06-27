@@ -73,7 +73,7 @@ useEffect(() => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://localhost:8000/google/callback",
+        "https://car-rental-backend-mda4.onrender.com/google/callback",
         new URLSearchParams({ code }),
         {
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -139,7 +139,7 @@ useEffect(() => {
     try {
       if (isLogin) {
         const res = await axios.post(
-          "http://localhost:8000/login",
+          "https://car-rental-backend-mda4.onrender.com/login",
           new URLSearchParams({
             username: formData.email,
             password: formData.password,
@@ -161,7 +161,7 @@ useEffect(() => {
           setLoading(false);
           return;
         }
-        await axios.post("http://localhost:8000/register", formData);
+        await axios.post("https://car-rental-backend-mda4.onrender.com/register", formData);
         toast.success("Registered Successfully",{id:"registered-successfully"});
         setTimeout(() => {
           toast.success("Please check your inbox/spam to verify your email.",{id:"check-inbox-email"});
@@ -182,7 +182,7 @@ useEffect(() => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:8000/google/login?state=${state}`
+        `https://car-rental-backend-mda4.onrender.com/google/login?state=${state}`
       );
       window.location.href = res.data.auth_url;
     } catch (error) {

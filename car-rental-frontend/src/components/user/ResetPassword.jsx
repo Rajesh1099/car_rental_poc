@@ -46,7 +46,7 @@ const ResetPassword = () => {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:8000/reset-password", {
+      await axios.post("https://car-rental-backend-mda4.onrender.com/reset-password", {
         token,
         new_password: newPassword,
       });

@@ -20,7 +20,7 @@ const ForgotPassword = () => {
     }
 
     try {
-      await axios.post("http://localhost:8000/forgot-password", { email });
+      await axios.post("https://car-rental-backend-mda4.onrender.com/forgot-password", { email });
       setSubmitted(true);
       setTimeout(() => navigate("/"), 2000); // Redirect after 2s
     } catch (err) {
