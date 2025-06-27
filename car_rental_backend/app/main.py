@@ -20,7 +20,7 @@ app = FastAPI()
 
 # Allow your React frontend origin during development
 origins = [
-    "https://boomboomcars.netlify.app/", 
+    "https://boomboomcars.netlify.app", 
     "http://localhost:5173",  # React app running locally
     
 ]

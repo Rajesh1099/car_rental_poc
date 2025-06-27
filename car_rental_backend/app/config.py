@@ -22,7 +22,7 @@ class Settings(BaseSettings):
 
     # DB and frontend
     DATABASE_URL: str
-    FRONTEND_BASE_URL: str = "https://boomboomcars.netlify.app/"
+    FRONTEND_BASE_URL: str = "https://boomboomcars.netlify.app"
 
     # Cashfree payment gateway
     CASHFREE_CLIENT_ID: str
