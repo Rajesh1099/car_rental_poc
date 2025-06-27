@@ -26,7 +26,7 @@ def generate_email_token(email: str):
 # ✅ Send email with verification link
 def send_verification_email(name: str, to_email: str, token: str):
     subject = "Verify your email"
-    verification_link = f"http://localhost:8000/verify-email?token={token}"  # Corrected URL path
+    verification_link = f"https://car-rental-backend-mda4.onrender.com/verify-email?token={token}"  # Corrected URL path
     body = f"""
 <!DOCTYPE html>
 <html>
